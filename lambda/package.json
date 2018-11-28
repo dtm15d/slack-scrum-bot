@@ -1,0 +1,17 @@
+{
+  "name": "lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "create": "AWS_PROFILE=clubwin AWS_REGION=us-east-1 arc-create",
+    "deploy": "AWS_PROFILE=clubwin AWS_REGION=us-east-1 arc-deploy",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@architect/workflows": "^3.6.0"
+  }
+}
