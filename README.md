@@ -22,14 +22,22 @@ This allows team members to help eachother and improve collaborationl. Additiona
 
 ## Setting up Database
 
-### Database: Dyanmo DB
-For cost and considering this is a single team use case we are using DynamoDb. For scale you may want to consider abstracting the database to SQL based system.
+### Database: Dyanmo DB Tables
+For cost and considering this is a single team use case we are using DynamoDb.
+You could also use SQL based system.
 
-1) Navigate to the DynamoDB service and the “Create Table” button.
-2) Create the following DyanmoDB Tables "SlackBot"
-3) Set primary key to "type"
-4) Enable sort key and set to "id"
-5) Uncheck Default settings to configuring scaling needs.
+### Table: *scrums*
+Table for our scrums
+* scrumID - uniquid for scrum
+* channelId - channel reference for slack
+* dayOfWeek - days of week for scrum
+* timeOfDay - time of day for scrum
+
+### Table: scrumResponses
+* responseId - for each response from a user
+* scrumsId - ref to scrum group
+* userId - slack user ref
+* update { yesterday, today, blockers }
 
 ### IAM Role Configuration - User
 
@@ -108,3 +116,16 @@ This allows our lambda to read/write to DynamoDB.
   * "AmazonDynamoDBFullAccess"
 4) Set name to "slack_bot"
 5) Select Create Role.
+
+
+## How to use
+1) Open team channel
+2) Configur SCRUM via `/scrumbot setup 09:00 GMT-0400`
+   * you must include UTC offset as above
+   * time is in military time.
+
+
+//TODO save Updates and message report.
+
+3) M-F at time configured each user will be messaged for their updates
+4) 10 minutes after SCRUM report will be slacked to channel.
