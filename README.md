@@ -3,17 +3,17 @@ Slack SCRUM Bot
 
 
 ## Objective
-The ob jective of this tool is to allow for management of the SCRUM ceramonie of the Agile Development process.
+The objective of this tool is to allow for management of the SCRUM ceremony of the Agile Development process.
 
 ## What is SCRUM?
 
-SCRUM is the daily ceramony that requires each team member to provide their daily update.
+SCRUM is the daily ceremony that requires each team member to provide their daily update.
 
 1. What did I did yesterday?
 2. What I am doing today?
 3. Any roadblocks or obstacles?
 
-This allows team members to help eachother and improve collaborationl. Additional the team leads can use this meeting to prevent developers from wasting time by helping repriotize and solve blockers.
+This allows team members to help each other and improve collaboration. Additionally, team leads can use this meeting to prevent developers from wasting time by helping reprioritize and solve blockers.
 
 # Deploying This Bot
 
