@@ -24,8 +24,8 @@ exports.handler = function slash(event, context, callback) {
   '\t/scrumbot setup [scrum-time HH:MM GMT-0400]\n' +
   '\t\t#Configure SCRUM for this channel to start M-F at certain time. \n' +
   '\t\t#Time format should be military time with timezone specified relative to GMT.\n' +
-  '\t/scrumbot test\n' +
-  '\t\t#Test scrum\n' +
+  '\t/scrumbot run\n' +
+  '\t\t#run SCRUM now.\n' +
   '\t/scrumbot info\n'+
   '\t\t#Print SCRUM configuration';
   
@@ -67,7 +67,7 @@ exports.handler = function slash(event, context, callback) {
    * /scrumbot test
    * Test SCRUM
    */
-  else if ("test" == event.text) {
+  else if ("run" == event.text) {
     callback(null, {
       response_type: "in_channel",
       text: 'Confirm test SCRUM in current channel?',
