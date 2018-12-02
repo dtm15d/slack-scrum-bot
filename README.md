@@ -79,7 +79,7 @@ https://arc.codes/quickstart
 
 ### Setup Slash Commands
 1) Select "Slash Commands" and "Create new Command"
-2) Set "command" = "scrumbot
+2) Set "command" = "scrumbot"
 3) set "Request URL" = [base-url printed during deploy] + "/bot/slash"
 4) Add description "configure scrum"
 
