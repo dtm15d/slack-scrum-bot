@@ -66,7 +66,7 @@ exports.handler = async (event, context, callback) => {
    */
   else if ("print" == event.text) {
     await ScrumBot.postSCRUMUpdates({
-        scrumID: ScrumBot.getLastSCRUMID(), 
+        scrumID: await ScrumBot.getLastSCRUMID({ channelId : event.channel_id }), 
         postInprogress: true, 
         callback
       })    

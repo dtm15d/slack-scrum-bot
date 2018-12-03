@@ -26,8 +26,21 @@ const ScrumBot = {
   /**
    * Get last active SCRUM ID
    */
-  getLastSCRUMID: () => {
-      return "4461d898c5a9"
+  getLastSCRUMID: async({ channelId }) => {
+      let allSCRUMS = await data.scrums.scan({})
+      var mostRecentSCRUM = false;
+      for (let index = 0; index < allSCRUMS.Items.length; index++) {
+        const scrum = allSCRUMS.Items[index];
+        if (channelId == scrum.channelId )
+        {
+          if (!mostRecentSCRUM || scrum.epoch > mostRecentSCRUM.epoch)
+          {
+            mostRecentSCRUM = scrum;
+            continue;
+          }
+        }
+      }
+      return mostRecentSCRUM ? mostRecentSCRUM.scrumID : false;
   },
   
   /**
