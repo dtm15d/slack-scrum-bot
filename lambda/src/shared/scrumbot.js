@@ -1,5 +1,5 @@
 let data = require('@architect/data')
-const token = "xoxp-433437584390-431515098769-489106887281-caa5a547161b08a69bb8d2584a5d769c"
+const token = "123"
 let slack = require('slack')
 
 /**
