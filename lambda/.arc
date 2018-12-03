@@ -31,4 +31,4 @@ scrums
 # }
 scrumResponses
   scrumID *String
-#  responseID *String
+  responseID **String
