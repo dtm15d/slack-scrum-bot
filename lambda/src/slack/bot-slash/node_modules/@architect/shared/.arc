@@ -30,4 +30,5 @@ scrums
 #    blockers
 # }
 scrumResponses
-  responseID *String
+  scrumID *String
+#  responseID *String
