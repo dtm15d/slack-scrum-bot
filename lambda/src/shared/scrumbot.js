@@ -60,16 +60,18 @@ const ScrumBot = {
     if (scrumResultSet && scrumResultSet.Items && scrumResultSet.Items.length == 1)
     {
       let scrum = scrumResultSet.Items[0];
-      if (scrum.membersResponded == scrum.totalMembers || postInprogress)
+      let isComplete = (scrum.membersResponded === scrum.totalMembers)
+      if (isComplete || postInprogress)
       {
           let channel = scrum.channelId;
-          let inProgress = (scrum.membersResponded === scrum.totalMembers)
+          let statusLabel = (isComplete ? "Complete" : "In Progress");
+          let statusColor = (isComplete ? "#2eb886" : "#ffff00");
           var attachments = []
           attachments.push({
-            fallback: "Report Status: " + (inProgress == true ? "In Progress" : "Complete"),
-            color: (inProgress == true ? "#ffff00" : "#2eb886"),
+            fallback: "Report Status: " + statusLabel,
+            color: statusColor,
             title: "Report Status",
-            text: (inProgress == true ? "In Progress" : "Complete"),            
+            text: statusLabel,
           })
           //print our SCRUMS
           let scrumResults = await data.scrumResponses.query({
