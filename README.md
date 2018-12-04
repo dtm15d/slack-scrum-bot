@@ -4,6 +4,7 @@ Slack SCRUM Bot
 
 ## Objective
 The objective of this tool is to allow for management of the SCRUM ceremony of the Agile Development process.
+The following instructions indicate how to deploy SCRUM Bot by Club Win.
 
 ## What is SCRUM?
 
@@ -17,14 +18,97 @@ This allows team members to help each other and improve collaboration. Additiona
 
 # Deploying This Bot
 
-## Requirements
-1) Amazon Web Services Acccount
+## Prerequisites:
+* AWS Account 
+** Full access to Lambda, API Gateway, DynamoDB
+* Configure AWS CLI
+  * https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
+* Active Slack Team
+  * With permissions to build and deploy apps.
+* Locally installed:
+  * Node 8.10.x 
+  * NPM 6.0.x locally 
 
-## Setting up Database
+## Setting up Code:
+* Check out a local copy of slack-scrum-bot (this repo)
 
-### Database: Dyanmo DB Tables
-For cost and considering this is a single team use case we are using DynamoDb.
-You could also use SQL based system.
+## Start Deploying App:
+1) Run `npm run create` in terminal or command line under lambda directory
+   
+   a) This will provision the following:
+   
+       i. DynamoDB
+       - Table: scrums - store each scrum that runs
+       - Table: scrumResponses - store each response associated with a SCRUM by each user
+
+       ii. API Gateway
+        - This exposes lambda externally to the world. This will set up production and staging environments.
+
+       iii. Lambda
+        - This will deploy our lambda functions for handling slash commands and interactive actions
+
+2) Run `npm run deploy` in terminal or command line under lambda directory
+
+   * Compile and deploy the latest code to lambda.
+   * `Note`: copy the endpoint that is printed out the the console. This is need to configure Slack.
+       - Sample: https://abc123.execute-api.us-east-1.amazonaws.com/staging
+       - This will be referred to as API_BASE_URL
+
+## Configure Slack App:
+1) Open Slack: https://api.slack.com/apps
+2) Select Create `New App`
+3) Set App Name (ie SCRUM Bot)
+4) Choose your workspace: (ie club win)
+5) Setting up Slash Commands:
+ * Select `Slash Commands` under `Features`
+ * Click `Create New Command`
+ * Set command (ie /scrumbot)
+ * Set Request URL:
+ * Value = API_BASE_URL + “/bot/slash”
+ * Provide Descript (ie “manage your teams daily SCRUM”)
+ * Click `Save`
+6) Setting up Interactive Components:
+ * Select `Interactive Components` under `Features`
+ * Turn `Interactivity` to `On`
+ * Set `Request URL`
+   * Value = `API_BASE_URL` + “/bot/actions”
+ * Click `Save Changes`
+
+## Authorizing App:
+1) Select `Oauth & Permissions` under `Features`
+ * Add the following scopes
+   * chat:write:bot
+   * channels:read
+   * groups:read
+ * Click `Save Changes`
+2) Click `Install App to Workspace`
+ * Click `Authorize`
+3) Copy the value of `OAuth Access Token`
+ * This will be referred to as `ACCESS_TOKEN`
+
+## Finish Deploying App:
+1) Update token config with the previous value from Slack
+ * Open file `lambda/src/shared/scrumbot.js`
+ * Replace `123` with `ACCESS_TOKEN`
+ * Run `npm run deploy` in terminal or command line under lambda directory
+
+## Using Slack Bot:
+1) Open your slack workspace to your teams channel for slack.
+2) Run `/scrumbot run`
+3) Press start to start interviewing for SCRUM.
+4) Each user is message privately in the channel to provide an update
+5) Run `/scrumbot print` to print the last scrum
+6) When complete the bot will automatically print the complete report.
+
+
+
+
+
+## More info
+
+### Reference 
+ * https://arc.codes/quickstart
+ * https://www.npmjs.com/package/slack
 
 ### Table: *scrums*
 Table for our scrums
@@ -38,94 +122,3 @@ Table for our scrums
 * scrumsId - ref to scrum group
 * userId - slack user ref
 * update { yesterday, today, blockers }
-
-### IAM Role Configuration - User
-
-#### User
-AWS Permissions required for user create initial app.
-
-1) iam:create
-2) lambda:*
-3) apigateway:*
-
-# App Setup
-
-## Arc Documentation (Background)
-https://arc.codes/quickstart/install
-"The simplest, most powerful way to build serverless applications"
-Arc allows use to focus on the application and builds out the lambda configuration for slack quickly.
-
-### Getting started with Arc
-https://arc.codes/quickstart
-
-### Building Application
-
-1) cd scrumbot
-2) Ensure you have configured aws credentials (https://docs.aws.amazon.com/cli/latest/userguide/cli-multiple-profiles.html)
-3) npm run create 
- * provision Lambda, api gateway for staging and production endpoints 
- * call this when adding new methods or first time
-4) npm run deploy
- * deployes latest code to previously privisioned lambda functions.
- * You only need to call this to deploy changes
-5) Note URL
-
-## Configuring Slack
-
-1) Open https://api.slack.com/
-2) Select Your Apps
-3) Create an App
-4) Set App Name (SCRUM Bot) and Workspace for development
-
-### Setup Slash Commands
-1) Select "Slash Commands" and "Create new Command"
-2) Set "command" = "scrumbot"
-3) set "Request URL" = [base-url printed during deploy] + "/bot/slash"
-4) Add description "configure scrum"
-
-### Setp Interactive Components
-1) Select "Interactive Components"
-2) Enable
-3) Set "Request URL" = [base-url printed during deploy] + "/bot/actions"
-4) Save Changes
-
-### Create Bot User
-1) Select "Bot Users"
-2) Enable bot.
-
-### Deploy to your Workspace
-1) Select "Basic Information"
-2) Select "Install in your Workspace" and authorize.
-
-
-## Configuring your first SCRUM
-1) Open Slack channel for SCRUM Team
-2) enter command /scrumbot setup
-3) follow prompts
-
-
-# IAM Role Configuration - User
-
-#### Lambda
-This allows our lambda to read/write to DynamoDB.
-
-1) Open IAM, Select Roles
-2) Set service to use role as Lambda
-3) Attach the following policies:
-  * "AWSLambdaBasicExecutionRole"
-  * "AmazonDynamoDBFullAccess"
-4) Set name to "slack_bot"
-5) Select Create Role.
-
-
-## How to use
-1) Open team channel
-2) Configur SCRUM via `/scrumbot setup 09:00 GMT-0400`
-   * you must include UTC offset as above
-   * time is in military time.
-
-
-//TODO save Updates and message report.
-
-3) M-F at time configured each user will be messaged for their updates
-4) 10 minutes after SCRUM report will be slacked to channel.

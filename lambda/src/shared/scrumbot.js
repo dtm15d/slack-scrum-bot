@@ -165,6 +165,7 @@ const ScrumBot = {
           token, 
           user,
           channel,
+          as_user: false,
           text: "SCRUM has started.",
           attachments: [{
             text: "Provide your update:",
